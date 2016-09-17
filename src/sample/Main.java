@@ -8,72 +8,92 @@ import java.util.Random;
 import static java.awt.SystemColor.text;
 
 public class Main extends Exception{
+    public static int poleX= 200;
+    public static int poleY=200;
+    public static int step=400;
+    public static int sharkCount=500;
+    public static int fishCount=8000;
+    public static int eatCount=30000;
 
+    public static int maxAgeShark=50;
+    public static int maxBabyShark=24;
+    public static int maxEatShark=23;
+
+    public static int maxAgeFish=15;
+    public static int maxBabyFish=7;
+    public static int maxEatFish=6;
     public static void main(String[] args)  {
+
+
         Random rand = new Random();
-        int [][] pole = new int [20][20];
+        int [][] pole = new int [201][201];
         ArrayList<Shark> shark = new ArrayList<>();ArrayList<Fish> fish = new ArrayList<>(); ArrayList<Eat> eat = new ArrayList<>();
-        for(int i =0;i<10;i++){
+        for(int i =0;i<sharkCount;i++){
             shark.add(new Shark());
+            shark.get(i).setFirstAge(rand.nextInt(maxAgeShark));
             while(true) {
-                int x = rand.nextInt(20);
-                int y = rand.nextInt(20);
-                boolean caseEmpty = pole[x][y] == 0;
-                if(caseEmpty){shark.get(i).setXY(x,y);pole[shark.get(i).getX()][shark.get(i).getY()]=3; break;}
+                int x = rand.nextInt(poleX);
+                int y = rand.nextInt(poleY);
+                boolean caseEmpty = (pole[x][y] == 0)&&x!=0&&y!=0;
+                if(caseEmpty){
+                    shark.get(i).setXY(x,y);
+                    pole[shark.get(i).getX()][shark.get(i).getY()]=3;
+                    break;}
             }
         }
-        for(int i =0;i<100;i++){
+        for(int i =0;i<fishCount;i++){
             fish.add(new Fish());
+            fish.get(i).setFirstAge(rand.nextInt(maxAgeFish));
             while(true) {
-                int x = rand.nextInt(20);
-                int y = rand.nextInt(20);
-                boolean caseEmpty = pole[x][y] == 0;
-                if(caseEmpty){fish.get(i).setXY(x,y);pole[fish.get(i).getX()][fish.get(i).getY()]=2; break;}
+                int x = rand.nextInt(poleX);
+                int y = rand.nextInt(poleY);
+                boolean caseEmpty = (pole[x][y] == 0)&&x!=0&&y!=0;
+                if(caseEmpty){fish.get(i).setXY(x,y);
+                    pole[fish.get(i).getX()][fish.get(i).getY()]=2;
+                    break;}
             }
         }
-        for(int i =0;i<290;i++){
+        for(int i =0;i<eatCount;i++){
             eat.add(new Eat());
             while(true) {
-                int x = rand.nextInt(20);
-                int y = rand.nextInt(20);
-                boolean caseEmpty = pole[x][y] == 0;
-                if(caseEmpty){eat.get(i).setXY(x,y);pole[eat.get(i).getX()][eat.get(i).getY()]=1; break;}
+                int x = rand.nextInt(poleX);
+                int y = rand.nextInt(poleY);
+                boolean caseEmpty = (pole[x][y] == 0)&&x!=0&&y!=0;
+                if(caseEmpty){eat.get(i).setXY(x,y);
+                    pole[eat.get(i).getX()][eat.get(i).getY()]=1;
+                    break;}
             }
         }
-        for(int i=0;i<300;i++) {
-            for(int j=0;j<shark.size();j++){
-                shark.get(j).setEat();
-                shark.get(j).setAge();
-                shark.get(j).setBaby();
-            }
-            for(int j=0;j<fish.size();j++){
-                fish.get(j).setEat();
-                fish.get(j).setAge();
-                fish.get(j).setBaby();
-            }
+        for(int i=0;i<step;i++) {
+
                 /*Смерть*/
             for (int j = 0; j < shark.size(); j++) {
-                if (shark.get(j).getEat() > 14 | shark.get(j).getAge() > 20) {
+                if (shark.get(j).getEat() > maxEatShark | shark.get(j).getAge() > maxAgeShark) {
                     int x = shark.get(j).getX();
                     int y = shark.get(j).getY();
                     pole[x][y] = 0;
+                    shark.get(j).resetEat();
+                    shark.get(j).resetBaby();
                     shark.remove(j);
+
                 }
             }
             for (int j = 0; j < fish.size(); j++) {
-                if (fish.get(j).getEat() > 9 | fish.get(j).getAge() > 13) {
+                if (fish.get(j).getEat() > maxEatFish | fish.get(j).getAge() > maxAgeFish) {
                     int x = fish.get(j).getX();
                     int y = fish.get(j).getY();
                     pole[x][y] = 0;
+                    fish.get(j).resetEat();
+                    fish.get(j).resetBaby();
                     fish.remove(j);
                 }
             }
                 /*Передвижение*/
             for (int j = 0; j < shark.size(); j++) {
-                if (shark.get(j).getAge() < 20) {
+                if (shark.get(j).getAge() < maxAgeShark) {
                     int x = shark.get(j).getX();
                     int y = shark.get(j).getY();
-                    if (x > 0 & x < 19 & y > 0 & y < 19) {
+                    if (x > 0 & x < poleX & y > 0 & y < poleY) {
                         if (pole[x][y + 1] == 0) {
                             shark.get(j).setX1Y1(x, y);
                             pole[x][y] = 0;
@@ -139,10 +159,10 @@ public class Main extends Exception{
                 }
             }
             for (int j = 0; j < fish.size(); j++) {
-                if (fish.get(j).getAge() < 13) {
+                if (fish.get(j).getAge() < maxAgeFish) {
                     int x = fish.get(j).getX();
                     int y = fish.get(j).getY();
-                    if (x > 0 & x < 19 & y > 0 & y < 19) {
+                    if (x > 0 & x < poleX & y > 0 & y < poleY) {
                         if (pole[x][y + 1] == 0) {
                             fish.get(j).setX1Y1(x, y);
                             pole[x][y] = 0;
@@ -209,7 +229,7 @@ public class Main extends Exception{
             }
             /*Потомки*/
             for (int j = 0; j < shark.size(); j++) {
-                if (shark.get(j).getBaby() >= 15) {
+                if (shark.get(j).getBaby() == maxBabyShark) {
                     shark.add(new Shark());
                     shark.get(shark.size()-1).setXY(shark.get(j).getX1(), shark.get(j).getY1());
                     pole[shark.get(j).getX1()][shark.get(j).getY1()] = 3;
@@ -218,7 +238,7 @@ public class Main extends Exception{
                 }
             }
             for (int j = 0; j < fish.size(); j++) {
-                if (fish.get(j).getBaby() >= 10) {
+                if (fish.get(j).getBaby() == maxBabyFish) {
                     fish.add(new Fish());
                     fish.get(fish.size()-1).setXY(fish.get(j).getX1(), fish.get(j).getY1());
                     pole[fish.get(j).getX1()][fish.get(j).getY1()] = 2;
@@ -226,8 +246,29 @@ public class Main extends Exception{
                     fish.get(j).resetEat();
                 }
             }
-            debug(pole);
-            String text = i+" "+shark.size()+" "+fish.size()+" "+eat.size()+"\n";
+            for(int j=0;j<shark.size();j++){
+                shark.get(j).setEat();
+                shark.get(j).setAge();
+                shark.get(j).setBaby();
+            }
+            for(int j=0;j<fish.size();j++){
+                fish.get(j).setEat();
+                fish.get(j).setAge();
+                fish.get(j).setBaby();
+            }
+            if(eat.size()<eatCount/2){
+                for(int j =0;j<eatCount/2;j++){
+                    eat.add(new Eat());
+                    while(true) {
+                        int x = rand.nextInt(poleX);
+                        int y = rand.nextInt(poleY);
+                        boolean caseEmpty = (pole[x][y] == 0)&&x!=0&&y!=0;
+                        if(caseEmpty){eat.get(j).setXY(x,y);pole[eat.get(j).getX()][eat.get(j).getY()]=1; break;}
+                    }
+                }
+            }
+            //debug(pole);
+            String text = i+" "+shark.size()+" "+fish.size()+" \r\n";
             try(FileOutputStream fos=new FileOutputStream("C://SomeDir//notes.txt",true))
             {
                 // перевод строки в байты
@@ -243,8 +284,8 @@ public class Main extends Exception{
 
     }
    static void debug(int [][] pole){
-        for(int c=0;c<20;c++){
-            for(int j =0;j<20;j++){
+        for(int c=0;c<poleX;c++){
+            for(int j =0;j<poleY;j++){
                 System.out.print(pole[c][j]);
             }
             System.out.println();

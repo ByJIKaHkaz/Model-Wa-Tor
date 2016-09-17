@@ -8,16 +8,20 @@ import java.util.Random;
  */
 public class Osob {
     Random random = new Random();
-    private int age=random.nextInt(5);
-    private int baby=random.nextInt(5);;
+    private int age=0;
+    private int baby=0;;
     private int eat=0;
     private int x=-1;
     private int y=-1;
     private int x1=0;
     private int y1=0;
+
     public Osob(){}
     public void setAge(){
         this.age+=1;
+    }
+    public void setFirstAge(int age){
+        this.age=age;
     }
     public int getAge(){
         return this.age;
