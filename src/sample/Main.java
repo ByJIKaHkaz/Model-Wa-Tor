@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static java.awt.SystemColor.text;
-
 public class Main extends Exception{
     public static int poleX= 200;
     public static int poleY=200;
@@ -158,6 +156,7 @@ public class Main extends Exception{
                     }
                 }
             }
+
             for (int j = 0; j < fish.size(); j++) {
                 if (fish.get(j).getAge() < maxAgeFish) {
                     int x = fish.get(j).getX();
